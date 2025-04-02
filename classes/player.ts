@@ -7,10 +7,13 @@ export class Player {
   public queue: Queue;
   public audioPlayer: AudioPlayer;
   public connection?: VoiceConnection;
+  public dcOnTimeout: boolean;
 
   constructor(client: Client) {
     this.client = client;
     this.queue = new Queue();
+    this.dcOnTimeout = true;
+
     this.audioPlayer = createAudioPlayer({
       behaviors: {
         noSubscriber: NoSubscriberBehavior.Pause,
@@ -31,13 +34,13 @@ export class Player {
   }
 
   disconnectVoice(): void {
-    this.connection?.disconnect();
+    this.connection?.destroy();
     this.queue.clear();
     Deno.removeSync('.musicCache', { recursive: true });
-
   }
 
   playNext(): void {
+    this.dcOnTimeout = false;
     if (this.audioPlayer.state.status === 'idle') {
       const resource = createAudioResource(this.queue.get()[0].getFile() ?? '');
       this.audioPlayer.play(resource);
@@ -45,9 +48,15 @@ export class Player {
   }
 
   nextInQueue(): void {
+    this.dcOnTimeout = false;
     const old = this.queue.shift();
+    let isInQueue = false;
 
-    if (old?.getFile()) Deno.removeSync(old.getFile());
+    for (const track of this.queue.get()) {
+      if (track.getId() === old?.getId()) isInQueue = true;
+    }
+
+    if (old?.getFile() && !isInQueue) Deno.removeSync(old.getFile());
 
     const resource = createAudioResource(this.queue.get()[0].getFile() ?? '');
     this.audioPlayer.play(resource);

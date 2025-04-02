@@ -55,4 +55,8 @@ export class Track {
   getFile(): string {
     return this.path ?? '';
   }
+
+  getId(): string {
+    return this.id ?? '';
+  }
 }
