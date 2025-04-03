@@ -1,6 +1,7 @@
 import { Client, VoiceBasedChannel } from 'npm:discord.js';
 import { AudioPlayer, createAudioPlayer, createAudioResource, joinVoiceChannel, NoSubscriberBehavior, VoiceConnection } from 'npm:@discordjs/voice';
 import { Queue } from "./queue.ts";
+import { Track } from './track.ts';
 
 export class Player {
   public client: Client;
@@ -64,5 +65,20 @@ export class Player {
 
   pause(): void {
     this.audioPlayer.state.status === 'playing' ? this.audioPlayer.pause() : this.audioPlayer.unpause();
+  }
+
+  async search(query: string): Promise<boolean | Track> {
+    const getInfo = new Deno.Command('/usr/bin/yt-dlp', {
+      args: [ '--default-search','ytsearch', `"${query}"`, '--dump-json' ],
+      stdin: 'null',
+      stdout: 'piped',
+    });
+
+    const child = getInfo.spawn();
+    const { stdout } = await child.output();
+
+    const data = JSON.parse(new TextDecoder().decode(stdout));
+
+    return await this.queue.add(`https://youtube.com/watch?v=${data.id}`);
   }
 }

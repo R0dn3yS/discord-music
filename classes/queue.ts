@@ -7,7 +7,7 @@ export class Queue {
     this.queue = [];
   }
 
-  async add(url: string): Promise<boolean | Track> {
+  async add(url: string): Promise<boolean|Track> {
     if (url.match(/^(?:https?:)?(?:\/\/)?(?:youtu\.be\/|(?:www\.|m\.)?youtube\.com\/(?:watch|v|embed)(?:\.php)?(?:\?.*v=|\/))([a-zA-Z0-9\_-]{7,15})(?:[\?&][a-zA-Z0-9\_-]+=[a-zA-Z0-9\_-]+)*(?:[&\/\#].*)?$/gm) === null || url.includes('"')) return false;
 
     const track = new Track(url);
@@ -38,7 +38,7 @@ export class Queue {
     return;
   }
 
-  async addToFirst(url: string): Promise<boolean | Track> {
+  async addToFirst(url: string): Promise<boolean|Track> {
     if (url.match(/^(?:https?:)?(?:\/\/)?(?:youtu\.be\/|(?:www\.|m\.)?youtube\.com\/(?:watch|v|embed)(?:\.php)?(?:\?.*v=|\/))([a-zA-Z0-9\_-]{7,15})(?:[\?&][a-zA-Z0-9\_-]+=[a-zA-Z0-9\_-]+)*(?:[&\/\#].*)?$/gm) === null || url.includes('"')) return false;
 
     const track = new Track(url);
