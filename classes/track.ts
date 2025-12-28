@@ -22,7 +22,7 @@ export class Track {
 
   async getMediaInfo(): Promise<Record<string, string>> {
     const getInfo = new Deno.Command('/usr/bin/yt-dlp', {
-      args: `--dump-json ${this.url}`.split(' '),
+      args: `--dump-json ${this.url} --remote-components ejs:github`.split(' '),
       stdin: 'null',
       stdout: 'piped',
     });
@@ -37,7 +37,7 @@ export class Track {
     if (!exists('dl')) Deno.mkdirSync('dl');
 
     const dlCmd = new Deno.Command('/usr/bin/yt-dlp', {
-      args: `-x --audio-format mp3 -o ${this.path} ${this.url}`.split(' '),
+      args: `-x --audio-format mp3 -o ${this.path} ${this.url} --remote-components ejs:github`.split(' '),
       stdin: 'null',
       stdout: 'null',
     });

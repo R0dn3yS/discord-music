@@ -69,7 +69,7 @@ export class Player {
 
   async search(query: string): Promise<boolean | Track> {
     const getInfo = new Deno.Command('/usr/bin/yt-dlp', {
-      args: [ '--default-search','ytsearch', `"${query}"`, '--dump-json' ],
+      args: [ '--default-search','ytsearch', `"${query}"`, '--dump-json', '--remote-components', 'ejs:github' ],
       stdin: 'null',
       stdout: 'piped',
     });
