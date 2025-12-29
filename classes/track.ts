@@ -1,4 +1,4 @@
-import { exists } from 'jsr:@std/fs/exists';
+import { exists } from 'jsr:@std/fs@1.0.21';
 
 export class Track {
   private url: string;

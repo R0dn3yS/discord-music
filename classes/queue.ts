@@ -1,4 +1,4 @@
-import { Track } from "./track.ts";
+import { Track } from './track.ts';
 
 export class Queue {
   private queue: Track[];
