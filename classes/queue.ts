@@ -1,4 +1,6 @@
+import { VoiceBasedChannel } from 'npm:discord.js@14.25.1';
 import { Track } from './track.ts';
+import { Player } from './player.ts';
 
 export class Queue {
   private queue: Track[];
@@ -17,16 +19,20 @@ export class Queue {
     return track;
   }
 
-  async addPlaylist(url: string): Promise<boolean|string> {
+  async addPlaylist(url: string, player: Player, channel: VoiceBasedChannel): Promise<boolean|string> {
     if (url.includes('&list') && url.match(/^(?:https?:)?(?:\/\/)?(?:youtu\.be\/|(?:www\.|m\.)?youtube\.com\/(?:watch|v|embed)(?:\.php)?(?:\?.*v=|\/))([a-zA-Z0-9\_-]{7,15})(?:[\?&][a-zA-Z0-9\_-]+=[a-zA-Z0-9\_-]+)*(?:[&\/\#].*)?$/gm) === null || url.includes('"')) return false;
 
     const list = await this.parsePlaylist(url);
+
+    player.joinVoice(channel);
 
     for (const url of list) {
       const track = new Track(url);
       if (!(await track.init())) continue;
 
       this.queue.push(track);
+
+      player.playNext();
     }
 
     return await this.getPlaylistName(url);
@@ -69,8 +75,6 @@ export class Queue {
 
   async parsePlaylist(url: string): Promise<string[]> {
     const output: string[] = [];
-
-    console.log('We are here');
 
     const getInfo = new Deno.Command('/usr/bin/yt-dlp', {
       args: `--dump-json ${url} --remote-components ejs:github --no-warning`.split(' '),
