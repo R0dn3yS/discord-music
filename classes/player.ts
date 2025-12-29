@@ -1,5 +1,5 @@
 import { Client, VoiceBasedChannel } from 'npm:discord.js@14.25.1';
-import { AudioPlayer, createAudioPlayer, createAudioResource, joinVoiceChannel, NoSubscriberBehavior, VoiceConnection } from 'npm:@discordjs/voice@0.19.0';
+import { AudioPlayer, createAudioPlayer, createAudioResource, joinVoiceChannel, NoSubscriberBehavior, VoiceConnection } from 'npm:@discordjs/voice@0.18.0';
 import { Queue } from './queue.ts';
 import { Track } from './track.ts';
 
