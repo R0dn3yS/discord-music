@@ -120,7 +120,7 @@ export class Queue {
 
     const sQueue = this.queue;
 
-    const firstTrack = sQueue.pop();
+    const firstTrack = sQueue.shift();
 
     for (let i = sQueue.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
