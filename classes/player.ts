@@ -1,5 +1,5 @@
 import { Client, VoiceBasedChannel } from 'npm:discord.js@14.25.1';
-import { AudioPlayer, createAudioPlayer, createAudioResource, joinVoiceChannel, NoSubscriberBehavior, VoiceConnection } from 'npm:@discordjs/voice@0.18.0';
+import { AudioPlayer, AudioPlayerPlayingState, createAudioPlayer, createAudioResource, joinVoiceChannel, NoSubscriberBehavior, VoiceConnection } from 'npm:@discordjs/voice@0.18.0';
 import { Queue } from './queue.ts';
 import { Track } from './track.ts';
 
@@ -80,5 +80,23 @@ export class Player {
     const data = JSON.parse(new TextDecoder().decode(stdout));
 
     return await this.queue.add(`https://youtube.com/watch?v=${data.id}`);
+  }
+
+  nowPlaying() {
+    const state = this.audioPlayer.state as AudioPlayerPlayingState;
+
+    const track = this.queue.get()[0]
+
+    if (state.status === 'playing') {
+      const nowplayingData = {
+        name: track.getTitle(),
+        duration: track.getDuration(),
+        at: Math.floor(state.playbackDuration / 1000)
+      }
+
+      return nowplayingData;
+    } else {
+      return false;
+    }
   }
 }

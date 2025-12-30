@@ -5,6 +5,7 @@ export class Track {
   private id?: string;
   private title?: string;
   private path?: string;
+  private duration?: number;
 
   constructor(url: string) {
     this.url = url;
@@ -15,6 +16,7 @@ export class Track {
 
     this.title = mediaInfo.title;
     this.id = mediaInfo.id;
+    this.duration = parseInt(mediaInfo.duration);
     this.path = `.musicCache/${this.id}.mp3`;
 
     return await this.downloadFile();
@@ -58,5 +60,9 @@ export class Track {
 
   getId(): string {
     return this.id ?? '';
+  }
+
+  getDuration(): number {
+    return this.duration ?? 0;
   }
 }
