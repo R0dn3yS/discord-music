@@ -114,4 +114,23 @@ export class Queue {
 
     return new TextDecoder().decode(stdout).trim();
   }
+
+  shuffle(): boolean {
+    if (this.queue.length === 0 || this.queue.length === 1) return false;
+
+    const sQueue = this.queue;
+
+    const firstTrack = sQueue.pop();
+
+    for (let i = sQueue.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [sQueue[i], sQueue[j]] = [sQueue[j], sQueue[i]];
+    }
+
+    sQueue.splice(0, 0, firstTrack!);
+
+    this.queue = sQueue;
+
+    return true;
+  }
 }
